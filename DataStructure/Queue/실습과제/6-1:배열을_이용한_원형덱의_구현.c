@@ -55,17 +55,18 @@ void error(char *message) {
 
 // 초기화
 void initDeque(DequeType* q) {
-	
+	q->front = 0;
+	q->rear = 0;
 }
 
 // 공백 상태 검출 함수
 int isEmpty(DequeType* q) {
-	
+	return q->front == q->rear;
 }
 
 // 포화 상태 검출 함수
 int isFull(DequeType* q) {
-	
+	return q->front == (q->rear+1) % MAX_DEQUE_SIZE;
 }
 
 // 덱 출력 함수(원형 큐 출력과 동일)
@@ -87,32 +88,61 @@ void printDeque(DequeType* q){
 
 // front 삽입 함수
 void addFront(DequeType* q, element item) {
-	
+	if(isFull(q)) {
+		error("Deque is Full");
+		return;
+	}
+	q->data[q->front] = item;
+	q->front = q->front-1 < 0 ? MAX_DEQUE_SIZE-1 : q->front-1;
 }
 
 // rear 삽입 함수
 void addRear(DequeType* q, element item) {
-	
+	if(isFull(q)) {
+		error("Deque is Full");
+		return;
+	}
+	q->data[(++q->rear)%MAX_DEQUE_SIZE] = item;
 }
 
 // front 삭제 함수
 element deleteFront(DequeType* q) {
-	
+	if(isEmpty(q)) {
+		error("Deque is Empty");
+		return 0;
+	}
+	return q->data[(++q->front)%MAX_DEQUE_SIZE];
 }
 
 // rear 삭제 함수
 element deleteRear(DequeType* q) {
-	
+	if(isEmpty(q)) {
+		error("Deque is Empty");
+		return 0;
+	}
+	if(q->rear-1 < 0) {
+		q->rear = MAX_DEQUE_SIZE-1;
+		return q->data[0];
+	}
+	return q->data[(q->rear--)%MAX_DEQUE_SIZE];
 }
 
 // front get 함수
 element getFront(DequeType* q) {
-	
+	if(isEmpty(q)) {
+		error("Deque is Empty");
+		return;
+	}
+	return q->data[(q->front+1)%MAX_DEQUE_SIZE];
 }
 
 // rear get 함수
 element getRear(DequeType* q) {
-	
+	if(isEmpty(q)) {
+		error("Deque is Empty");
+		return;
+	}
+	return q->data[q->rear];
 }
 
 int main() {
